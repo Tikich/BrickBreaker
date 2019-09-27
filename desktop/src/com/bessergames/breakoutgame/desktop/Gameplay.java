@@ -2,6 +2,7 @@ package com.bessergames.breakoutgame.desktop;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,6 +39,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	
 	public Gameplay()
 	{
+		map = new BrickGenerator(6, 9);
 		addKeyListener(this);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(true);
@@ -62,6 +64,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		g.fillRect(0, 0, 692, 3);
 		g.fillRect(691, 0, 3, 592);
 		
+		//draw map
+		map.draw((Graphics2D)g);
 		
 		//paddle
 		g.setColor(Color.orange);
