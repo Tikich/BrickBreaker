@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -28,6 +31,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	private int ballXdir = -1;
 	private int ballYdir = -3;
 	
+	private MyMouseMotionListener mouseListener;
+	
 	public Gameplay()
 	{
 		addKeyListener(this);
@@ -35,6 +40,10 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		setFocusTraversalKeysEnabled(true);
 		timer = new Timer(delay, this);
 		timer.start();
+		
+		mouseListener = new MyMouseMotionListener();
+		addMouseMotionListener(mouseListener);
+		addMouseListener(mouseListener);
 		
 	}
 	
@@ -118,5 +127,78 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private class MyMouseMotionListener implements MouseMotionListener,MouseListener
+	{
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) 
+		{
+			playerX = e.getX();
+			
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) 
+		{
+			play = true;
+			if(ballPosY > 530)
+			{
+				play = true;
+				ballPosX = playerX;
+				ballPosY = 525;
+				ballXdir = -1;
+				ballYdir = -3;
+				score = 0;
+				totalBricks = 54;
+				
+				repaint();
+			}
+			if(totalBricks == 0) 
+			{
+				play = true;
+				ballPosX = playerX;
+				ballPosY = 525;
+				ballXdir = -1;
+				ballYdir = -3;
+				playerX = 310;
+				score = 0;
+				totalBricks = 54;
+				
+				repaint();
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
 	}
 }
