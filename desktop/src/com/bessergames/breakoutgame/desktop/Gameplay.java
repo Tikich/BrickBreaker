@@ -2,6 +2,7 @@ package com.bessergames.breakoutgame.desktop;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -74,7 +75,33 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		timer.start();
+		timer.start();	
+		if(new Rectangle(ballPosX, ballPosY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8)))
+		{
+			ballYdir = -ballYdir;
+		}
+		if(play)
+		{
+			ballPosX += ballXdir;
+			ballPosY += ballYdir;
+			
+			if(ballPosX < 0) 
+			{
+				ballXdir = -ballXdir;
+			}
+			if(ballPosY < 0) 
+			{
+				ballYdir = -ballYdir;
+			}
+			if(ballPosX > 670) 
+			{
+				ballXdir = -ballXdir;				
+			}
+		}
+		if(!play)
+		{
+			ballPosX = playerX + 40;
+		}
 		repaint();
 		
 	}
