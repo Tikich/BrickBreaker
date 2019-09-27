@@ -32,6 +32,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	private int ballXdir = -1;
 	private int ballYdir = -3;
 	
+	private BrickGenerator map;
+	
 	private MyMouseMotionListener mouseListener;
 	
 	public Gameplay()
