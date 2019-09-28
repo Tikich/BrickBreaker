@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -38,6 +39,8 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	
 	private BrickGenerator map;
 	
+	private ArrayList<BrickExplosion> brickExplosion;
+	
 	private MyMouseMotionListener mouseListener;
 	
 	
@@ -49,6 +52,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		setFocusTraversalKeysEnabled(true);
 		timer = new Timer(delay, this);
 		timer.start();
+		brickExplosion = new ArrayList<BrickExplosion>();
 		
 		mouseListener = new MyMouseMotionListener();
 		addMouseMotionListener(mouseListener);
@@ -83,7 +87,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		//ball
 		g.setColor(Color.yellow);
 		g.fillOval(ballPosX, ballPosY, 20, 20);
-			
+		
+		for(BrickExplosion bx : brickExplosion) 
+		{
+			bx.update();
+			bx.draw((Graphics2D)g);
+		}
+		
 		if(ballPosY > 535)
 		{
 			play = false;
@@ -156,6 +166,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 						totalBricks--;
 						score += 5;
 						hit = true;
+						
+						if(map.map[i][j] == 0)
+						{
+							brickExplosion.add(new BrickExplosion(brickX, brickY, map));
+						}
 						
 						if(ballPosX + 19 <= brickRect.x || ballPosX + 1 >= brickRect.x + brickRect.width)
 						{
@@ -321,5 +336,17 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		}
 
 
+	}
+	
+	public void update()
+	{
+		for(int i = 0; i < brickExplosion.size(); i++)
+		{
+			brickExplosion.get(i).update();
+			if(!brickExplosion.get(i).getIsActive())
+			{
+				brickExplosion.remove(i);
+			}
+		}
 	}
 }
