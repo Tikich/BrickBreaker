@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -20,6 +21,7 @@ import javax.swing.Timer;
 public class Gameplay extends JPanel implements KeyListener, ActionListener
 {
 	private boolean play = false;
+	private boolean hit = false;
 	private int score = 0;
 	
 	private int totalBricks = 54;
@@ -37,6 +39,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	private BrickGenerator map;
 	
 	private MyMouseMotionListener mouseListener;
+	
 	
 	public Gameplay()
 	{
@@ -84,6 +87,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		if(ballPosY > 535)
 		{
 			play = false;
+			hit = false;
 			g.setColor(Color.red);
 			g.setFont(new Font("serif", Font.BOLD, 45));
 			g.drawString("Game Over!", 220, 300);
@@ -96,6 +100,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		if(totalBricks == 0)
 		{
 			play = false;
+			hit = false;
 			ballPosY = 525;
 			g.setColor(Color.pink);
 			g.setFont(new Font("serif", Font.BOLD, 45));
@@ -103,6 +108,18 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 			
 			g.setFont(new Font("serif", Font.BOLD, 25));
 			g.drawString("Click To Restart", 245, 400);
+		}
+		
+		if(hit) 
+		{
+			g.setColor(new Color(173, 216, 230));
+			g.fillOval(ballPosX, ballPosY, 20, 20);
+			
+		}
+		else 
+		{
+			g.setColor(Color.yellow);
+			g.fillOval(ballPosX, ballPosY, 20, 20);
 		}
 		
 	}
@@ -114,6 +131,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		if(new Rectangle(ballPosX, ballPosY, 20, 20).intersects(new Rectangle(playerX, 550, 100, 8)))
 		{
 			ballYdir = -ballYdir;
+			hit = false;
 		}
 		
 		
@@ -137,6 +155,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 						map.setBrickValue(0, i, j);
 						totalBricks--;
 						score += 5;
+						hit = true;
 						
 						if(ballPosX + 19 <= brickRect.x || ballPosX + 1 >= brickRect.x + brickRect.width)
 						{
