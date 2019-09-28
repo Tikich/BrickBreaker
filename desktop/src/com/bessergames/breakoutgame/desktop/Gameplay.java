@@ -1,6 +1,7 @@
 package com.bessergames.breakoutgame.desktop;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -67,6 +68,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		//draw map
 		map.draw((Graphics2D)g);
 		
+		//score
+		g.setColor(Color.PINK);
+		g.setFont(new Font("serif", Font.BOLD, 25));
+		g.drawString("Score  " + score, 10, 30);
+		
 		//paddle
 		g.setColor(Color.orange);
 		g.fillRect(playerX, 550, 100, 8);
@@ -75,6 +81,29 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		g.setColor(Color.yellow);
 		g.fillOval(ballPosX, ballPosY, 20, 20);
 			
+		if(ballPosY > 535)
+		{
+			play = false;
+			g.setColor(Color.red);
+			g.setFont(new Font("serif", Font.BOLD, 45));
+			g.drawString("Game Over!", 220, 300);
+			g.drawString("Score: " + score, 255, 350);
+			
+			g.setFont(new Font("serif", Font.BOLD, 25));
+			g.drawString("Click To Restart", 245, 400);
+		}
+		
+		if(totalBricks == 0)
+		{
+			play = false;
+			ballPosY = 525;
+			g.setColor(Color.pink);
+			g.setFont(new Font("serif", Font.BOLD, 45));
+			g.drawString("You Win!", 240, 300);
+			
+			g.setFont(new Font("serif", Font.BOLD, 25));
+			g.drawString("Click To Restart", 245, 400);
+		}
 		
 	}
 
@@ -228,6 +257,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 				ballYdir = -3;
 				score = 0;
 				totalBricks = 54;
+				map = new BrickGenerator(6,9);
 				
 				repaint();
 			}
@@ -241,6 +271,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 				playerX = 310;
 				score = 0;
 				totalBricks = 54;
+				map = new BrickGenerator(6,9);
 				
 				repaint();
 			}
