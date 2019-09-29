@@ -12,9 +12,16 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -35,7 +42,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	private int ballPosX = 350;
 	private int ballPosY = 525;
 	private int ballXdir = -1;
-	private int ballYdir = -3;
+	private int ballYdir = -4;
 	
 	private BrickGenerator map;
 	
@@ -134,6 +141,31 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		
 	}
 
+	public void Sound(String soundFile, int repeat)
+	{
+		try 
+		{		
+			File soundLoc = new File(soundFile);
+			AudioInputStream audio = AudioSystem.getAudioInputStream(soundLoc);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audio);
+			clip.loop(repeat);
+			clip.start();
+		}
+		catch(UnsupportedAudioFileException uae)
+		{
+			System.out.println(uae);
+		}
+		catch(IOException ioe)
+		{
+			System.out.println(ioe);
+		}
+		catch(LineUnavailableException lua)
+		{
+			System.out.println(lua);
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -151,7 +183,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 			{
 				if(map.map[i][j] > 0)
 				{
-					int brickX = j * map.brickwidth + 80;					
+					int brickX = j * map.brickwidth + 80;			
 					int brickY = i * map.brickheight + 50;
 					int brickWidth = map.brickwidth;
 					int brickHeight = map.brickheight;
@@ -166,6 +198,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 						totalBricks--;
 						score += 5;
 						hit = true;
+						Sound("Resources\\Score.wav", 0);
 						
 						if(map.map[i][j] == 0)
 						{
@@ -180,6 +213,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 						{
 							ballYdir = -ballYdir;
 						}
+						
 						break A;
 					}
 					
@@ -192,11 +226,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 			ballPosX += ballXdir;
 			ballPosY += ballYdir;
 			
-			if(ballPosX < 0) 
+			if(ballPosX < 0 ) 
 			{
 				ballXdir = -ballXdir;
 			}
-			if(ballPosY < 0) 
+			if(ballPosY < 0 ) 
 			{
 				ballYdir = -ballYdir;
 			}
