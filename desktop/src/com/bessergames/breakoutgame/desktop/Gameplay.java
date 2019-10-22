@@ -25,8 +25,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Gameplay extends JPanel implements KeyListener, ActionListener
+
+public class Gameplay extends JPanel implements KeyListener, ActionListener, Screen
 {
 	private boolean play = false;
 	private boolean hit = false;
@@ -46,10 +52,12 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 	
 	private BrickGenerator map;
 	
-	private ArrayList<BrickExplosion> brickExplosion;
+	//private ArrayList<BrickExplosion> brickExplosion;
 	
 	private MyMouseMotionListener mouseListener;
 	
+	private SpriteBatch batch;
+	private ParticleEffect effect;
 	
 	public Gameplay()
 	{
@@ -59,7 +67,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		setFocusTraversalKeysEnabled(true);
 		timer = new Timer(delay, this);
 		timer.start();
-		brickExplosion = new ArrayList<BrickExplosion>();
+		//brickExplosion = new ArrayList<BrickExplosion>();
 		
 		mouseListener = new MyMouseMotionListener();
 		addMouseMotionListener(mouseListener);
@@ -95,11 +103,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 		g.setColor(Color.yellow);
 		g.fillOval(ballPosX, ballPosY, 20, 20);
 		
-		for(BrickExplosion bx : brickExplosion) 
+		/*for(BrickExplosion bx : brickExplosion) 
 		{
 			bx.update();
 			bx.draw((Graphics2D)g);
-		}
+		}*/
 		
 		if(ballPosY > 535)
 		{
@@ -200,10 +208,10 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 						hit = true;
 						Sound("Resources\\Score.wav", 0);
 						
-						if(map.map[i][j] == 0)
+						/*if(map.map[i][j] == 0)
 						{
 							brickExplosion.add(new BrickExplosion(brickX, brickY, map));
-						}
+						}*/
 						
 						if(ballPosX + 19 <= brickRect.x || ballPosX + 1 >= brickRect.x + brickRect.width)
 						{
@@ -372,7 +380,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 
 	}
 	
-	public void update()
+	/*public void update()
 	{
 		for(int i = 0; i < brickExplosion.size(); i++)
 		{
@@ -382,5 +390,55 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener
 				brickExplosion.remove(i);
 			}
 		}
+	}*/
+	
+	@Override
+	public void show() 
+	{
+		batch = new SpriteBatch();
+		effect = new ParticleEffect();
+		
+		if(hit) 
+		{
+			effect.load(Gdx.files.internal("ParticleEffects/HitDot.p"), Gdx.files.internal("Img/Whitedot.png"));
+			effect.setPosition(ballPosX, ballPosY);
+			effect.start();
+		}
+	
+	}
+
+	@Override
+	public void render(float delta) 
+	{
+		Gdx.gl.glClearColor(0,0,0,1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		batch.begin();
+		effect.draw(batch, delta);
+		batch.end();
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() 
+	{
+		dispose();
+	}
+	
+	@Override
+	public void dispose() 
+	{
+	  batch.dispose();		
 	}
 }
